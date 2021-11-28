@@ -15,7 +15,7 @@ contract("ProfilesTests", function (/* accounts */) {
 
     it("should set name", async () => {
         await instance.setName('chris');
-        profile = await instance.retrieveMyProfile.call();
+        profile = await instance.getMyProfile.call();
         assert.deepEqual(
             profile,
             ['0x0000000000000000000000000000000000000000', 'chris', '', '', '0', '0', false, false],
@@ -23,8 +23,8 @@ contract("ProfilesTests", function (/* accounts */) {
         );
 
         // gas calculation
-        let gasEstimate = await instance.retrieveMyProfile.estimateGas();
-        console.log('\x1b[36m%s\x1b[0m', 'gas cost for Profiles.retrieveMyProfile is: ' + gasEstimate);
+        let gasEstimate = await instance.getMyProfile.estimateGas();
+        console.log('\x1b[36m%s\x1b[0m', 'gas cost for Profiles.getMyProfile is: ' + gasEstimate);
         assert(gasEstimate < 100000);
 
         gasEstimate = await instance.setName.estimateGas('chris');
@@ -34,7 +34,7 @@ contract("ProfilesTests", function (/* accounts */) {
 
     it('should set profile pic', async () => {
         await instance.setProfilePictureUrl('profile pic');
-        profile = await instance.retrieveMyProfile.call();
+        profile = await instance.getMyProfile.call();
         assert.deepEqual(
             profile,
             ['0x0000000000000000000000000000000000000000', 'chris', 'profile pic', '', '0', '0', false, false],
@@ -43,14 +43,14 @@ contract("ProfilesTests", function (/* accounts */) {
 
         // gas calculation
         let gasEstimate = await instance.setProfilePictureUrl.estimateGas('profile pic');
-        console.log('\x1b[36m%s\x1b[0m', 'gas cost for Profiles.retrieveMyProfile is: ' + gasEstimate);
+        console.log('\x1b[36m%s\x1b[0m', 'gas cost for Profiles.getMyProfile is: ' + gasEstimate);
         assert(gasEstimate < 100000);
 
     });
 
     it('should set bio', async () => {
         await instance.setBio('new bio');
-        profile = await instance.retrieveMyProfile.call();
+        profile = await instance.getMyProfile.call();
         assert.deepEqual(
             profile,
             ['0x0000000000000000000000000000000000000000', 'chris', 'profile pic', 'new bio', '0', '0', false, false],
@@ -66,7 +66,7 @@ contract("ProfilesTests", function (/* accounts */) {
 
     it('should set profile info', async () => {
         await instance.setProfileInfo('johnny', 'different profile pic', 'changed bio');
-        profile = await instance.retrieveMyProfile.call();
+        profile = await instance.getMyProfile.call();
         assert.deepEqual(
             profile,
             ['0x0000000000000000000000000000000000000000', 'johnny', 'different profile pic', 'changed bio', '0', '0', false, false],

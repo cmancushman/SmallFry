@@ -10,7 +10,7 @@ contract("LikesTests", function (/* accounts */) {
         const instance = await Likes.deployed();
 
         // should add post
-        await instance.addPost('title-1', 'desc-1');
+        await instance.postToMyFeed('title-1', 'desc-1');
         let posts = await instance.getMyPosts.call(1, 0);
         const author = posts[0].author;
         const postId = posts[0].postId;
@@ -42,7 +42,7 @@ contract("LikesTests", function (/* accounts */) {
         const instance = await Likes.deployed();
 
         // should add post
-        await instance.addPost('title-1', 'desc-1');
+        await instance.postToMyFeed('title-1', 'desc-1');
         let posts = await instance.getMyPosts.call(1, 0);
         const author = posts[0].author;
         const postId = posts[0].postId;

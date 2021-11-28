@@ -22,7 +22,7 @@ contract("RepliesTests", function (/* accounts */) {
     it("should add and reply to post", async () => {
 
         // add post
-        await instance.addPost('title-1', 'desc-1');
+        await instance.postToMyFeed('title-1', 'desc-1');
         let posts = await instance.getMyPosts.call(1, 0);
         author = posts[0].author;
         postId = posts[0].postId;

@@ -95,7 +95,7 @@ contract Profiles {
      * @dev Fetch own profile
      * @return profile
      */
-    function retrieveMyProfile() public view returns (Profile memory){
+    function getMyProfile() public view returns (Profile memory){
         return profiles[msg.sender];
     }
 
@@ -103,7 +103,7 @@ contract Profiles {
      * @dev Fetch user's profile
      * @return profile
      */
-    function retrieveProfile(address adr) public view returns (Profile memory){
+    function getProfile(address adr) public view returns (Profile memory){
         return profiles[adr];
     }
 }

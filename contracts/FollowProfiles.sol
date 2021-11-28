@@ -9,6 +9,7 @@ import './Profiles.sol';
  */
 contract FollowProfiles is Profiles {
 
+    mapping(address => mapping(address => bool)) hasFollowedMapping; // a boolean mapping for follow history
     mapping(address => mapping(address => uint)) followersIndexMapping; // an index mapping of each follower within a user's follower list
     mapping(address => Profile[]) followersMapping; // mapping of addresses to the corresponding user's follower list
 
@@ -20,21 +21,22 @@ contract FollowProfiles is Profiles {
      */
     function followUser(address adr) public {
 
+        bool hasFollowed = hasFollowedMapping[msg.sender][adr];
         uint followerIndex = followersIndexMapping[adr][msg.sender];
         Profile[] storage followedProfiles = followersMapping[adr];
         Profile memory alreadyFollowedProfile;
         if (followedProfiles.length != 0) {
             alreadyFollowedProfile = followedProfiles[followerIndex];
-        }    
+        }
 
         Profile memory ownProfile;
         Profile memory followProfile;
 
         // check if the mapping already exists, and if so re-follow the user that was unfollowed
-        if (alreadyFollowedProfile.adr != address(0) && alreadyFollowedProfile.unfollowed) {
+        if (hasFollowed && alreadyFollowedProfile.unfollowed) {
 
-            ownProfile = retrieveMyProfile();
-            followProfile = retrieveProfile(adr);
+            ownProfile = getMyProfile();
+            followProfile = getProfile(adr);
 
             uint followingIndex = followingIndexMapping[msg.sender][adr];
 
@@ -45,12 +47,12 @@ contract FollowProfiles is Profiles {
             setFollowingCountForAddress(msg.sender, ownProfile.followingCount + 1);
 
             return;
-        } else if (alreadyFollowedProfile.adr != address(0)) {
+        } else if (hasFollowed) {
             return; // if the user is not unfollowed, do nothing
         }
 
-        ownProfile = retrieveMyProfile();
-        followProfile = retrieveProfile(adr);
+        ownProfile = getMyProfile();
+        followProfile = getProfile(adr);
 
         ownProfile.adr = msg.sender;
         followProfile.adr = adr;
@@ -60,6 +62,8 @@ contract FollowProfiles is Profiles {
 
         followersIndexMapping[adr][msg.sender] = followersMapping[adr].length - 1;
         followingIndexMapping[msg.sender][adr] = followingMapping[msg.sender].length - 1;
+
+        hasFollowedMapping[msg.sender][adr] = true;
 
         setFollowerCountForAddress(adr, followProfile.followerCount + 1);
         setFollowingCountForAddress(msg.sender, ownProfile.followingCount + 1);
@@ -71,14 +75,15 @@ contract FollowProfiles is Profiles {
      */
     function unfollowUser(address adr) public {
 
+        bool hasFollowed = hasFollowedMapping[msg.sender][adr];
         uint followerIndex = followersIndexMapping[adr][msg.sender];
         Profile storage alreadyFollowedProfile = followersMapping[adr][followerIndex];
 
         // if mapping already exists, unfollow the user that was followed
-        if (alreadyFollowedProfile.adr != address(0) && !alreadyFollowedProfile.unfollowed) {
+        if (hasFollowed && !alreadyFollowedProfile.unfollowed) {
 
-            Profile memory ownProfile = retrieveMyProfile();
-            Profile memory followProfile = retrieveProfile(adr);
+            Profile memory ownProfile = getMyProfile();
+            Profile memory followProfile = getProfile(adr);
 
             uint followingIndex = followingIndexMapping[msg.sender][adr];
 
@@ -94,6 +99,18 @@ contract FollowProfiles is Profiles {
 
     function getFollowers(address adr) public view returns (Profile[] memory) {
         return followersMapping[adr];
+    }
+
+    function getMyFollowers() public view returns (Profile[] memory) {
+        return followersMapping[msg.sender];
+    }
+
+    function getIsUserFollowingMe(address adr) public view returns (bool) {
+        bool hasFollowed = hasFollowedMapping[adr][msg.sender];
+
+        uint followerIndex = followersIndexMapping[adr][msg.sender];
+        Profile storage profile = followersMapping[adr][followerIndex];
+        return (hasFollowed && !profile.unfollowed);
     }
 
     function getFollowing(address adr) public view returns (Profile[] memory) {

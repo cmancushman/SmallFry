@@ -5,7 +5,7 @@ pragma solidity >=0.7.0 <0.9.0;
 import './UserPosts.sol';
 import './Replies.sol';
 
-contract Likes is UserPosts, Replies {
+contract Likes is Replies {
 
     mapping(address => mapping(uint => bool) ) likedPosts;
     mapping(address => mapping(uint => bool) ) likedReplies;
