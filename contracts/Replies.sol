@@ -6,12 +6,18 @@ import './UserPosts.sol';
 
 contract Replies is UserPosts {
 
-  mapping(address => uint[]) userReplyKeys;
-  mapping(address => mapping(uint => Post)) userReplies;
+  mapping(address => uint[]) userReplyKeys; // mapping of addresses to list of corresponding user's reply keys
+  mapping(address => mapping(uint => Post)) userReplies; // mapping of addresses to the corresponding user's replies
 
-  mapping(uint => uint[]) postReplyKeys;
-  mapping(uint => mapping(uint => Post)) postReplies;
+  mapping(uint => uint[]) postReplyKeys; // mapping of postIds to list of corresponding post's reply keys
+  mapping(uint => mapping(uint => Post)) postReplies; // mapping of postIds to the corresponding post's replies
 
+    /**
+     * @dev Reply to a post
+     * @param postId the id of the post to be replied to
+     * @param author the address of the author of the post to be replied to
+     * @param description the description of the reply
+     */
     function replyToPost(uint postId, address author, string memory description) public {
         Post storage post = userPosts[author][postId];
         
@@ -32,6 +38,12 @@ contract Replies is UserPosts {
         userPosts[author][postId].replyCount++;
     }
 
+    /**
+     * @dev Reply to a reply
+     * @param replyId the id of the reply to be replied to
+     * @param author the address of the author of the reply to be replied to
+     * @param description the description of the reply
+     */
     function replyToReply(uint replyId, address author, string memory description) public {
         Post storage sourceReply = userReplies[author][replyId];
 
@@ -52,6 +64,13 @@ contract Replies is UserPosts {
         userReplies[author][replyId].replyCount++;
     }
 
+    /**
+     * @dev Get replies to a post
+     * @param postId the id of the post to be replied to
+     * @param limit the max number of replies to fetch
+     * @param offset the offset of the starting index of replies to fetch
+     * @return list of replies to a post, bound by the limit and offset
+     */
     function getRepliesToPost(uint postId, uint limit, uint offset) public view returns (Post[] memory) {
         Post[] memory repliesSubset = new Post[](limit);
         mapping(uint => Post) storage currentPostReplies = postReplies[postId];
@@ -65,6 +84,13 @@ contract Replies is UserPosts {
         return repliesSubset;
     }
 
+    /**
+     * @dev Get replies a user has made
+     * @param adr the address of the user
+     * @param limit the max number of replies to fetch
+     * @param offset the offset of the starting index of replies to fetch
+     * @return list of replies a user has made, bound by the limit and offset
+     */
     function getRepliesFromUser(address adr, uint limit, uint offset) public view returns (Post[] memory) {
         Post[] memory repliesSubset = new Post[](limit);
         mapping(uint => Post) storage currentUserReplies = userReplies[adr];

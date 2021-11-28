@@ -18,6 +18,7 @@ contract FollowProfiles is Profiles {
 
     /**
      * @dev Follow a user
+     * @param adr address of the user to follow
      */
     function followUser(address adr) public {
 
@@ -71,7 +72,7 @@ contract FollowProfiles is Profiles {
 
     /**
      * @dev Follow a user
-     * @param adr address of the user to follow
+     * @param adr address of the user to unfollow
      */
     function unfollowUser(address adr) public {
 
@@ -97,14 +98,28 @@ contract FollowProfiles is Profiles {
         }
     }
 
+    /**
+     * @dev Fetch profiles that follow a user
+     * @param adr the address of the profile
+     * @return profiles that follow a user
+     */
     function getFollowers(address adr) public view returns (Profile[] memory) {
         return followersMapping[adr];
     }
 
+    /**
+     * @dev Fetch profiles that follow 'me'
+     * @return profiles that follow msg.sender
+     */
     function getMyFollowers() public view returns (Profile[] memory) {
         return followersMapping[msg.sender];
     }
 
+    /**
+     * @dev Fetch if a user is following 'me'
+     * @param adr the address of the profile
+     * @return true if user is following msg.sender, otherwise false
+     */
     function getIsUserFollowingMe(address adr) public view returns (bool) {
         bool hasFollowed = hasFollowedMapping[adr][msg.sender];
 
@@ -113,6 +128,11 @@ contract FollowProfiles is Profiles {
         return (hasFollowed && !profile.unfollowed);
     }
 
+    /**
+     * @dev Fetch profiles a user is following
+     * @param adr the address of the profile
+     * @return profiles the user is following
+     */
     function getFollowing(address adr) public view returns (Profile[] memory) {
         return followingMapping[adr];
     }

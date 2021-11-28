@@ -7,9 +7,13 @@ import './Replies.sol';
 
 contract Likes is Replies {
 
-    mapping(address => mapping(uint => bool) ) likedPosts;
-    mapping(address => mapping(uint => bool) ) likedReplies;
+    mapping(address => mapping(uint => bool)) likedPosts; // posts that have been liked
+    mapping(address => mapping(uint => bool)) likedReplies; // replies that have been liked
 
+    /**
+     * @dev Like a post
+     * @param postId post id of the post to like
+     */
     function likePost(uint postId) public {
           
         bool isLiked = !likedPosts[msg.sender][postId];
@@ -21,7 +25,13 @@ contract Likes is Replies {
             userPosts[msg.sender][postId].likeCount--;
         }
     }
-    
+
+    /**
+     * @dev Like a reply
+     * @param replyId post id of the reply to like
+     * @param postId post id of the post the reply is associated with
+     * @param adr address of the author of the reply
+     */
     function likeReply(uint replyId, uint postId, address adr) public {
 
         bool isLiked = !likedReplies[adr][replyId];
@@ -36,10 +46,20 @@ contract Likes is Replies {
         }
     }
 
+    /**
+     * @dev Fetch if post is liked
+     * @param postId post id of the post
+     * @return true if the post has been liked by msg.sender, otherwise false
+     */
     function getPostIsLiked(uint postId) public view returns (bool) {
         return likedPosts[msg.sender][postId];
     }
-    
+
+    /**
+     * @dev Fetch if reply is liked
+     * @param replyId post id of the reply
+     * @return true if the reply has been liked by msg.sender, otherwise false
+     */   
     function getReplyIsLiked(uint replyId) public view returns (bool) {
         return likedReplies[msg.sender][replyId];
     }

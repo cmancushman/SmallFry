@@ -101,6 +101,7 @@ contract Profiles {
 
     /**
      * @dev Fetch user's profile
+     * @param adr the address of the profile
      * @return profile
      */
     function getProfile(address adr) public view returns (Profile memory){
