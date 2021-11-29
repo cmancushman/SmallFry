@@ -6,5 +6,5 @@ import './Replies.sol';
 import './Likes.sol';
 import './Profiles.sol';
 
-contract SocialSwap is Likes {
+contract SmallFry is Likes {
 }
