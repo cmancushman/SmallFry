@@ -1,5 +1,5 @@
 # SmallFry Contract
-- Fully on-chain social feed/follow/react/reply protocol.
+SmallFRy is a fully on-chain social feed/follow/react/reply protocol.
 
 ## Getting Started
 - [Install truffle](https://www.trufflesuite.com/docs/truffle/getting-started/installation)
